@@ -2,10 +2,14 @@ package cl.ejeldes.springsecurity.oauth2jwt.contoller;
 
 import cl.ejeldes.springsecurity.oauth2jwt.entity.Hello;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by emilio on Nov 12, 2018
  */
+@RestController
+@RequestMapping("/")
 public class HelloController {
 
     @GetMapping
