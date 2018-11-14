@@ -28,11 +28,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         //@formatter:off
         http
                 .authorizeRequests()
+                    .antMatchers("/h2-console/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .oauth2Login()
                     .authorizationEndpoint()
-                        .authorizationRequestRepository(authorizationRequestRepository);
+                        .authorizationRequestRepository(authorizationRequestRepository)
+                        .and()
+                    .and()
+                .csrf().disable();
+
+        http.headers().frameOptions().disable();
         //@formatter:on
     }
 }

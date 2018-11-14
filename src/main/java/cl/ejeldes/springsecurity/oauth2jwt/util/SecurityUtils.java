@@ -1,4 +1,4 @@
-package cl.ejeldes.springsecurity.oauth2jwt.security.util;
+package cl.ejeldes.springsecurity.oauth2jwt.util;
 
 
 import org.springframework.stereotype.Component;

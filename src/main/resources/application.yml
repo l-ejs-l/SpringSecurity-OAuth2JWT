@@ -11,3 +11,11 @@ spring:
           facebook:
             client-id: 267400487295308
             client-secret: ae9546faf611bb40df044c915874f23f
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug

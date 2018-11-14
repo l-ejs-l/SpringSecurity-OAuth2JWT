@@ -1,7 +1,7 @@
 package cl.ejeldes.springsecurity.oauth2jwt.security;
 
-import cl.ejeldes.springsecurity.oauth2jwt.security.util.SecurityUtils;
 import cl.ejeldes.springsecurity.oauth2jwt.util.GenericUtils;
+import cl.ejeldes.springsecurity.oauth2jwt.util.SecurityUtils;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
     public static final String REDIRECT_URI_COOKIE_PARAM_NAME = "redirect_uri";
     private static final String AUTHORIZATION_REQUEST_ATTR_NAME = "AUTHORIZATION_REQUEST";
 
-    private int cookieExpiracySecs = 120;
+    private int cookieExpirySecs = 120;
 
     public static void deleteCookies(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
@@ -63,7 +63,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
         Cookie cookie = new Cookie(AUTHORIZATION_REQUEST_ATTR_NAME, GenericUtils.serialize(authorizationRequest));
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(cookieExpiracySecs);
+        cookie.setMaxAge(cookieExpirySecs);
         response.addCookie(cookie);
 
         String redirectURI = request.getParameter(REDIRECT_URI_COOKIE_PARAM_NAME);
@@ -71,10 +71,9 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements
             cookie = new Cookie(REDIRECT_URI_COOKIE_PARAM_NAME, redirectURI);
             cookie.setPath("/");
             cookie.setHttpOnly(true);
-            cookie.setMaxAge(cookieExpiracySecs);
+            cookie.setMaxAge(cookieExpirySecs);
             response.addCookie(cookie);
         }
-
 
     }
 
