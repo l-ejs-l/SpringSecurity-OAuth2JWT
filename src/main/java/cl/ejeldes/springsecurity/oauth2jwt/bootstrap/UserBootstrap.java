@@ -55,7 +55,7 @@ public class UserBootstrap implements CommandLineRunner {
         dto2.setPassword(encoder.encode("12345"));
 
 
-        userService.save(dto1);
+//        userService.save(dto1);
         userService.save(dto2);
     }
 

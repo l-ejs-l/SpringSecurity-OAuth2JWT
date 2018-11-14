@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,5 +46,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (authorities.isEmpty()) throw new UsernameNotFoundException(message);
 
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+    }
+
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findByEmail(username);
     }
 }

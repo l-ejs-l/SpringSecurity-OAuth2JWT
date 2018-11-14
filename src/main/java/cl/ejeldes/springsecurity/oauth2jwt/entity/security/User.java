@@ -1,10 +1,7 @@
 package cl.ejeldes.springsecurity.oauth2jwt.entity.security;
 
 import cl.ejeldes.springsecurity.oauth2jwt.util.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -21,6 +18,7 @@ import java.util.Set;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class User extends BaseEntity<Long> {
 
     @Column(unique = true)
