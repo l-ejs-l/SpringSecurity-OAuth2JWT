@@ -19,3 +19,6 @@ logging:
     org:
       hibernate:
         SQL: debug
+
+jwt:
+  key: 841D8A6C80CBA4FCAD32D5367C18C53B

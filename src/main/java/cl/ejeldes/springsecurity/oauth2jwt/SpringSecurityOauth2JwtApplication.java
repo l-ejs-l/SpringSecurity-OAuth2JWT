@@ -1,67 +1,56 @@
 package cl.ejeldes.springsecurity.oauth2jwt;
 
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.DirectEncrypter;
-import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.BadJOSEException;
-import com.nimbusds.jose.proc.JWEDecryptionKeySelector;
-import com.nimbusds.jose.proc.JWEKeySelector;
-import com.nimbusds.jose.proc.SimpleSecurityContext;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
-import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+import cl.ejeldes.springsecurity.oauth2jwt.security.JWTService;
+import cl.ejeldes.springsecurity.oauth2jwt.security.JWTSignedServiceImpl;
+import com.nimbusds.jose.JOSEException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootApplication
 public class SpringSecurityOauth2JwtApplication {
 
-    public static void main(String[] args) throws JOSEException, BadJOSEException, ParseException {
+    public static void main(String[] args) throws JOSEException, ParseException {
         SpringApplication.run(SpringSecurityOauth2JwtApplication.class, args);
+
         Logger logger = LoggerFactory.getLogger(SpringSecurityOauth2JwtApplication.class);
 
-        JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                .claim("email", "sanjay@example.com")
-                .claim("name", "Sanjay Patel")
-                .build();
+        JWTService jwtService = new JWTSignedServiceImpl();
 
-        logger.info("Claims created");
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_USER");
+        roles.add("ROLE_ADMIN");
 
-        Payload payload = new Payload(claims.toJSONObject());
-        logger.info("Payload created");
+        Map<String, Object> alice = new HashMap<>();
+        alice.put("authorities", roles);
+
+        String token1 = jwtService.createToken("alice", "alice", 120000L, alice);
+        logger.info("JWService TOKEN: \n" + token1);
+
+        logger.info("JWTService parsed: \n" + jwtService.parseToken(token1).toJSONObject());
 
 
-        JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A128CBC_HS256);
-        logger.info("JWEHeader created");
-
-        String secret = "841D8A6C80CBA4FCAD32D5367C18C53B";
-        byte[] secretKey = secret.getBytes();
-        DirectEncrypter encrypter = new DirectEncrypter(secretKey);
-
-        JWEObject jweObject = new JWEObject(header, payload);
-        jweObject.encrypt(encrypter);
-        String token = jweObject.serialize();
-        logger.info("JWE TOKEN CREATED: " + token);
-
-        ConfigurableJWTProcessor<SimpleSecurityContext> jwtProcessor = new DefaultJWTProcessor<SimpleSecurityContext>();
-
-        JWKSource<SimpleSecurityContext> jweKeySource = new ImmutableSecret<SimpleSecurityContext>(secretKey);
-        JWEKeySelector<SimpleSecurityContext> jweKeySelector =
-                new JWEDecryptionKeySelector<SimpleSecurityContext>(JWEAlgorithm.DIR, EncryptionMethod.A128CBC_HS256,
-                                                                    jweKeySource);
-        jwtProcessor.setJWEKeySelector(jweKeySelector);
-
-        JWTClaimsSet parsedClaims = jwtProcessor.process(token, null);
-        String email = (String) parsedClaims.getClaim("email");
-        String name = (String) parsedClaims.getClaim("name");
-
-        logger.info("JWE: NAME: " + name);
-        logger.info("JWE: EMAIL" + email);
+//        // Create JWE object with signed JWT as payload
+//        JWEObject jweObject = new JWEObject(
+//                new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)
+//                        .contentType("JWT") // required to indicate nested JWT
+//                        .build(),
+//                new Payload(signedJWT));
+//
+//        // Encrypt with the recipient's public key
+//        jweObject.encrypt(new RSAEncrypter(recipientPublicJWK));
+//
+//        // Serialise to JWE compact form
+//        String jweString = jweObject.serialize();
+//
+//        logger.info("JWE: " + jweString);
 
     }
 }
