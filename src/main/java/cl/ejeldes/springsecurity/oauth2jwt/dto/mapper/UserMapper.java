@@ -6,7 +6,6 @@ import cl.ejeldes.springsecurity.oauth2jwt.entity.security.User;
 import cl.ejeldes.springsecurity.oauth2jwt.exception.ResourceNotFoundException;
 import cl.ejeldes.springsecurity.oauth2jwt.util.dto.AbstractMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +24,7 @@ public class UserMapper extends AbstractMapper<UserDTO, User> {
         }
 
         UserDTO dto = new UserDTO();
-        if (user.getId() != null && user.getId() != 0) dto.setId(user.getId().toString());
+        if (user.getId() != null && user.getId() != 0) dto.setId(user.getId());
         if (user.getEmail() != null && !user.getEmail().equals("")) dto.setUsername(user.getEmail());
         if (user.getPassword() != null && !user.getPassword().equals("")) dto.setPassword(user.getPassword());
         if (user.getRoles() != null && user.getRoles().size() > 0) {

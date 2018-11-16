@@ -1,6 +1,8 @@
 package cl.ejeldes.springsecurity.oauth2jwt.util;
 
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
@@ -23,4 +25,10 @@ public class SecurityUtils {
 
         return Optional.empty();
     }
+
+    public static String currentUsername() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user.getUsername();
+    }
+
 }

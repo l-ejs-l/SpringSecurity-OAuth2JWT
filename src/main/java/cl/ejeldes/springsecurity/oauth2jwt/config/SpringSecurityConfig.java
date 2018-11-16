@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 
 /**
  * Created by emilio on Nov 12, 2018
@@ -49,8 +48,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         .oidcUserService(customOidcUserService)
                         .and()
                     .and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .csrf().disable();
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.headers().frameOptions().disable();
 

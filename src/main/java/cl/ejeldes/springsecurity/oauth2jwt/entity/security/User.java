@@ -1,13 +1,14 @@
 package cl.ejeldes.springsecurity.oauth2jwt.entity.security;
 
+import cl.ejeldes.springsecurity.oauth2jwt.dto.UserDTO;
 import cl.ejeldes.springsecurity.oauth2jwt.util.entity.BaseEntity;
 import lombok.*;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by emilio on Nov 12, 2018
@@ -26,7 +27,7 @@ public class User extends BaseEntity<Long> {
     @NotBlank
     private String email;
 
-    @Nullable
+    @NotBlank
     private String password;
 
     private Boolean enable = true;
@@ -39,4 +40,15 @@ public class User extends BaseEntity<Long> {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}
     )
     private Set<Role> roles;
+
+    public UserDTO toUserDTO() {
+        UserDTO userDTO = new UserDTO();
+
+        userDTO.setPassword(password);
+        userDTO.setUsername(email);
+        userDTO.setRoles(roles.stream().map(Role::getAuthority).collect(Collectors.toSet()));
+        userDTO.setId(getId());
+
+        return userDTO;
+    }
 }

@@ -1,6 +1,9 @@
 package cl.ejeldes.springsecurity.oauth2jwt.contoller;
 
+import cl.ejeldes.springsecurity.oauth2jwt.dto.UserDTO;
 import cl.ejeldes.springsecurity.oauth2jwt.entity.Hello;
+import cl.ejeldes.springsecurity.oauth2jwt.security.CustomPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +28,12 @@ public class HelloController {
     @GetMapping("/admin")
     public Hello adminHello() {
         return getHello("This is a message for the admin", "The admin");
+    }
+
+    @GetMapping("/user")
+    public UserDTO getPrincipal() {
+        CustomPrincipal principal = (CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal.getUserDTO();
     }
 
     private Hello getHello(String s, String s2) {

@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Custom implementation of a UserDetailsService to load the users from a db and return a
+ * <p>
  * Created by emilio on Nov 13, 2018
  */
 @Service
@@ -45,7 +47,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if (authorities.isEmpty()) throw new UsernameNotFoundException(message);
 
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+        return new CustomPrincipal(user.toUserDTO());
     }
 
     public Optional<User> findUserByUsername(String username) {

@@ -1,5 +1,6 @@
 package cl.ejeldes.springsecurity.oauth2jwt.security;
 
+import cl.ejeldes.springsecurity.oauth2jwt.dto.UserDTO;
 import cl.ejeldes.springsecurity.oauth2jwt.entity.security.Role;
 import cl.ejeldes.springsecurity.oauth2jwt.entity.security.User;
 import cl.ejeldes.springsecurity.oauth2jwt.exception.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -41,9 +43,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         this.roleRepository = roleRepository;
     }
 
+    /**
+     * This method load the user from the DB with <code>CustomUserDetailsService</code> and returns a
+     * <code>CustomPrincipal</code> which extends from <code>OAuth2User</code>
+     *
+     * @param userRequest
+     * @return
+     * @throws OAuth2AuthenticationException
+     */
+    @Transactional(readOnly = true)
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        return buildPrincipal(oAuth2User);
+    }
+
+    public CustomPrincipal buildPrincipal(OAuth2User oAuth2User) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
 
@@ -54,6 +69,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             Role role_user = roleRepository.findByAuthority("ROLE_USER").orElseThrow(ResourceNotFoundException::new);
             roles.add(role_user);
 
+            logger.info("ROLES: \n" + roles.toString());
+
             u.setRoles(roles);
             u.setEmail(email);
             u.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
@@ -61,8 +78,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return u;
         });
 
+        logger.info("USER: \n" + user);
+
         userRepository.save(user);
 
-        return oAuth2User;
+        UserDTO userDTO = user.toUserDTO();
+
+        logger.info("USER DTO: \n" + userDTO);
+
+        CustomPrincipal principal = new CustomPrincipal(userDTO);
+        principal.setAttributes(attributes);
+        principal.setName(oAuth2User.getName());
+
+        logger.info("PRINCIPAL: \n" + principal.toString());
+        return principal;
     }
 }
