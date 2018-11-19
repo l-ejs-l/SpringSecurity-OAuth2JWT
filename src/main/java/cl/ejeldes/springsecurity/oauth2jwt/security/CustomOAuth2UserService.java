@@ -43,15 +43,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         this.roleRepository = roleRepository;
     }
 
-    /**
-     * This method load the user from the DB with <code>CustomUserDetailsService</code> and returns a
-     * <code>CustomPrincipal</code> which extends from <code>OAuth2User</code>
-     *
-     * @param userRequest
-     * @return
-     * @throws OAuth2AuthenticationException
-     */
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -69,8 +61,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             Role role_user = roleRepository.findByAuthority("ROLE_USER").orElseThrow(ResourceNotFoundException::new);
             roles.add(role_user);
 
-            logger.info("ROLES: \n" + roles.toString());
-
             u.setRoles(roles);
             u.setEmail(email);
             u.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
@@ -78,19 +68,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return u;
         });
 
-        logger.info("USER: \n" + user);
+        logger.debug("USER: \n" + user);
 
-        userRepository.save(user);
+        User save = userRepository.save(user);
+        logger.debug("SAVED" + save.toString());
 
         UserDTO userDTO = user.toUserDTO();
 
-        logger.info("USER DTO: \n" + userDTO);
+        logger.debug("USER DTO: \n" + userDTO);
 
         CustomPrincipal principal = new CustomPrincipal(userDTO);
         principal.setAttributes(attributes);
         principal.setName(oAuth2User.getName());
 
-        logger.info("PRINCIPAL: \n" + principal.toString());
+        logger.debug("PRINCIPAL: \n" + principal.toString());
         return principal;
     }
 }

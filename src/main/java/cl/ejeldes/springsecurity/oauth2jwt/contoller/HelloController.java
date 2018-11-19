@@ -31,7 +31,7 @@ public class HelloController {
     }
 
     @GetMapping("/user")
-    public UserDTO getPrincipal() {
+    public UserDTO getUser() {
         CustomPrincipal principal = (CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return principal.getUserDTO();
     }

@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -90,6 +91,7 @@ public class CustomPrincipal implements UserDetails, OidcUser, CredentialsContai
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String toString() {
         String str = "PRINCIPAL: \n" +
                 "USER DTO: \n" + userDTO.toString() + "\n" +
@@ -99,7 +101,7 @@ public class CustomPrincipal implements UserDetails, OidcUser, CredentialsContai
         StringBuilder attrString = new StringBuilder("ATRIBUTES: \n");
 
         for (String key : keys) {
-            String o = (String) attributes.get(key);
+            String o = String.valueOf(attributes.get(key));
             attrString.append(o).append("\n");
         }
 

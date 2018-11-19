@@ -11,7 +11,14 @@ spring:
           facebook:
             client-id: 267400487295308
             client-secret: ae9546faf611bb40df044c915874f23f
+  #  datasource:
+  #    url: jdbc:mysql://localhost:3306/db_springboot?useSSL=false
+  #    username: root
+  #    password: mi-contraseña
+  #    driver-class-name: com.mysql.jdbc.Driver
   jpa:
+#    database-platform: org.hibernate.dialect.MySQL5Dialect
+#    database: mysql
     hibernate:
       ddl-auto: create-drop
 logging:
@@ -22,3 +29,4 @@ logging:
 
 jwt:
   key: 841D8A6C80CBA4FCAD32D5367C18C53B
+

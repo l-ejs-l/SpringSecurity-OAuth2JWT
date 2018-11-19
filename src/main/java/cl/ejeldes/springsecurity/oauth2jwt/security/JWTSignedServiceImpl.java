@@ -80,7 +80,7 @@ public class JWTSignedServiceImpl implements JWTService {
     }
 
     @Override
-    public String createToken(String audience, String subject, Long expirationMillis) throws JOSEException {
+    public String createToken(String audience, String subject, Long expirationMillis) {
         return createToken(audience, subject, expirationMillis, new HashMap<>());
     }
 
