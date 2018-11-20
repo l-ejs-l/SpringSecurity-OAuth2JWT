@@ -53,6 +53,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public CustomPrincipal buildPrincipal(OAuth2User oAuth2User) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
+        String name = (String) attributes.get("name");
+
+        logger.info("Attributes: \n", attributes);
 
         User user = userDetailsService.findUserByUsername(email).orElseGet(() -> {
             User u = new User();
@@ -62,6 +65,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             roles.add(role_user);
 
             u.setRoles(roles);
+            u.setName(name);
             u.setEmail(email);
             u.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
             u.setEnable(true);

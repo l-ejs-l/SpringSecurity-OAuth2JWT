@@ -27,6 +27,8 @@ public class User extends BaseEntity<Long> {
     @NotBlank
     private String email;
 
+    private String name;
+
     @NotBlank
     private String password;
 
@@ -48,6 +50,7 @@ public class User extends BaseEntity<Long> {
         userDTO.setUsername(email);
         userDTO.setRoles(roles.stream().map(Role::getAuthority).collect(Collectors.toSet()));
         userDTO.setId(getId());
+        userDTO.setName(name);
 
         return userDTO;
     }

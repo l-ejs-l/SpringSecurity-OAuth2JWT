@@ -27,6 +27,7 @@ public class UserMapper extends AbstractMapper<UserDTO, User> {
         if (user.getId() != null && user.getId() != 0) dto.setId(user.getId());
         if (user.getEmail() != null && !user.getEmail().equals("")) dto.setUsername(user.getEmail());
         if (user.getPassword() != null && !user.getPassword().equals("")) dto.setPassword(user.getPassword());
+        if (user.getName() != null && !user.getName().equals("")) dto.setName(user.getName());
         if (user.getRoles() != null && user.getRoles().size() > 0) {
             Set<String> roles = new HashSet<>();
 
@@ -62,6 +63,7 @@ public class UserMapper extends AbstractMapper<UserDTO, User> {
 
         if (dto.getUsername() != null && !dto.getUsername().equals("")) user.setEmail(dto.getUsername());
         if (dto.getPassword() != null && !dto.getPassword().equals("")) user.setPassword(dto.getPassword());
+        if (dto.getName() != null && !dto.getName().equals("")) user.setName(dto.getName());
 
         return user;
     }
