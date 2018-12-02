@@ -1,12 +1,14 @@
 package cl.ejeldes.springsecurity.oauth2jwt.entity.security;
 
 import cl.ejeldes.springsecurity.oauth2jwt.dto.UserDTO;
+import cl.ejeldes.springsecurity.oauth2jwt.entity.UserLog;
 import cl.ejeldes.springsecurity.oauth2jwt.util.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

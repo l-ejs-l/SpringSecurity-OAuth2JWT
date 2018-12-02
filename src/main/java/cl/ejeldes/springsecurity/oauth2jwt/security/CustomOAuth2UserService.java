@@ -6,6 +6,7 @@ import cl.ejeldes.springsecurity.oauth2jwt.entity.security.User;
 import cl.ejeldes.springsecurity.oauth2jwt.exception.ResourceNotFoundException;
 import cl.ejeldes.springsecurity.oauth2jwt.repository.RoleRepository;
 import cl.ejeldes.springsecurity.oauth2jwt.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +32,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final CustomUserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    ObjectMapper objectMapper = new ObjectMapper();
     private Logger logger = LoggerFactory.getLogger(CustomOAuth2UserService.class);
 
     public CustomOAuth2UserService(BCryptPasswordEncoder passwordEncoder,
@@ -54,8 +56,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
         String name = (String) attributes.get("name");
-
-        logger.info("Attributes: \n", attributes);
 
         User user = userDetailsService.findUserByUsername(email).orElseGet(() -> {
             User u = new User();
